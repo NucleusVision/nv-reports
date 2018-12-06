@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Nucleus Vision - MIS (Management Information System) Dashboard</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link href="css/global.css" rel="stylesheet" type="text/css" />
+    <link rel="shortcut icon" type="image/png" href="img/favicon.png">
+
+  </head>
+  <body>
+    <header>
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-6 col-xs-9">
+            <a href="dashboard.html"><img src="img/logo.png"></a>
+          </div>
+          <div class="col-md-6 col-xs-3">
+            <div class="nav-icon">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    <div class="container-fluid mrb50">
+      <div class="row">
+        <div class="col-md-2 col-md-offset-4 xs-mrb15">
+          <select class="form-control mrl15 xs-mrl0 slct-year">
+            <option  value="2018" selected="selected">2018</option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <select class="form-control mrl15 xs-mrl0 slct-month">            
+            <option  value="October">October</option>
+            <option  value="November">November</option>
+            <option  value="December" selected="selected">December</option>
+          </select>
+        </div>    
+        
+      </div>
+    </div>
+    <div class="container-fluid">
+      <div id="shoppers" class="graph-container"></div>
+      <div class="not-found">
+          <h2 align="center">Not Found</h2>
+      </div>
+    </div>
+    
+    <script src="js/jquery.min.js" type="text/javascript"></script>
+    <script src="js/bootstrap.min.js" type="text/javascript"></script>
+
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+
+            
+
+            var year = $('.slct-year option:selected').val();
+            var month = $('.slct-month option:selected').val();
+
+            var url = year+'-'+month;
+
+            $.getJSON('json/'+url+'.json', function(data) {
+                var chart = $('#shoppers').highcharts();
+                chart.series[0].setData(data.shoppers);
+                chart.series[1].setData(data.unique_shoppers);
+                chart.xAxis[0].setCategories(data.xAxis);
+            });
+
+            $('.slct-month, .slct-year').change(function (e) {
+                e.preventDefault();
+
+                var year = $('.slct-year option:selected').val();
+                var month = $('.slct-month option:selected').val();
+
+                var url = year+'-'+month;
+                
+
+                //alert(url);
+
+                $.getJSON('json/'+url+'.json', function(data) {
+                    
+                    var chart = $('#shoppers').highcharts();
+                    chart.series[0].setData(data.shoppers);
+                    chart.series[1].setData(data.unique_shoppers);
+                    chart.xAxis[0].setCategories(data.xAxis);
+                    
+                })
+                .done(function() {
+                    $('.not-found').hide();
+                    $('.graph-container').show();
+                    var chart = $('#shoppers').highcharts();
+                    chart.series[0].setData(data.shoppers);
+                    chart.series[1].setData(data.unique_shoppers);
+                    chart.xAxis[0].setCategories(data.xAxis);
+                })
+                .fail(function() {
+                    $('.graph-container').hide();
+                    $('.not-found').show();
+                });
+            });
+
+
+            
+        });
+
+        $(document).ready(function () {
+
+            Highcharts.chart('shoppers', {
+                chart: {
+                    type: 'line',
+                    backgroundColor:'transparent'
+                },
+                title: {
+                    text: 'Shoppers Foot Fall',
+                    style: {
+                      color: "#FFF"
+                    }
+                },
+                legend: {
+                    itemStyle: {
+                       color: '#FFF'
+                    },
+                    itemHoverStyle: {
+                       color: '#999'
+                    },
+                    itemHiddenStyle: {
+                       color: '#666'
+                    }           
+                },
+                xAxis: {
+                    categories: [],
+                    labels: {
+                        style: {
+                          color: "#FFF"
+                        }
+                    },
+                },
+                yAxis: {
+                    title: {
+                        text: ''
+                    },
+                    labels: {
+                        style: {
+                          color: "#FFF"
+                        }
+                    },
+                    gridLineColor: '#001a2e'
+                },
+                plotOptions: {
+                    line: {
+                        dataLabels: {
+                            enabled: true,
+                            style: {
+                                color: "#FFF"
+                            }
+                        },
+                        enableMouseTracking: false
+                    }
+                },
+                series: [
+                    {
+                        name: 'Unique Shoppers Captured',
+                        color: '#18b682'
+                    },
+                    {
+                        name: 'Number of Shoppers Captured',
+                    }
+                ],
+                navigation: {
+                  buttonOptions: {
+                      enabled: false
+                  }
+                }
+            });
+        });
+
+    </script>
+  </body>
+</html>
