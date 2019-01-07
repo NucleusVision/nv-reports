@@ -25,18 +25,30 @@
         </div>
       </div>
     </header>
+
+    <div class="m-menu-bg">
+      <div class="nav-icon open">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <a href="https://www.nucleus.vision/">Go To Website</a>      
+    </div>
+
     <div class="container-fluid mrb50">
       <div class="row">
         <div class="col-md-2 col-md-offset-4 xs-mrb15">
           <select class="form-control mrl15 xs-mrl0 slct-year">
-            <option  value="2018" selected="selected">2018</option>
+            <option  value="2018">2018</option>
+            <option  value="2019" selected="selected">2019</option>
           </select>
         </div>
         <div class="col-md-2">
           <select class="form-control mrl15 xs-mrl0 slct-month">            
             <option  value="October">October</option>
             <option  value="November">November</option>
-            <option  value="December" selected="selected">December</option>
+            <option  value="December">December</option>
+            <option  value="January" selected="selected">January</option>
           </select>
         </div>    
         
@@ -59,6 +71,13 @@
     <script type="text/javascript">
         $(function () {
 
+            $('.nav-icon').click(function(){
+              $(".m-menu-bg").toggleClass("open");            
+            });
+
+            $('.m-menu-bg a, .nav-icon.open').click(function(){
+                $(".m-menu-bg").removeClass("open");
+            });
             
 
             var year = $('.slct-year option:selected').val();
@@ -68,8 +87,7 @@
 
             $.getJSON('json/'+url+'.json', function(data) {
                 var chart = $('#shoppers').highcharts();
-                chart.series[0].setData(data.shoppers);
-                chart.series[1].setData(data.unique_shoppers);
+                chart.series[0].setData(data.unique_shoppers);
                 chart.xAxis[0].setCategories(data.xAxis);
             });
 
@@ -87,8 +105,7 @@
                 $.getJSON('json/'+url+'.json', function(data) {
                     
                     var chart = $('#shoppers').highcharts();
-                    chart.series[0].setData(data.shoppers);
-                    chart.series[1].setData(data.unique_shoppers);
+                    chart.series[0].setData(data.unique_shoppers);
                     chart.xAxis[0].setCategories(data.xAxis);
                     
                 })
@@ -96,8 +113,7 @@
                     $('.not-found').hide();
                     $('.graph-container').show();
                     var chart = $('#shoppers').highcharts();
-                    chart.series[0].setData(data.shoppers);
-                    chart.series[1].setData(data.unique_shoppers);
+                    chart.series[0].setData(data.unique_shoppers);
                     chart.xAxis[0].setCategories(data.xAxis);
                 })
                 .fail(function() {
@@ -115,10 +131,13 @@
             Highcharts.chart('shoppers', {
                 chart: {
                     type: 'line',
-                    backgroundColor:'transparent'
+                    backgroundColor:'transparent',
+                    zoomType: 'x',
+                    panning: true,
+                    panKey: 'shift'
                 },
                 title: {
-                    text: 'Shoppers Foot Fall',
+                    text: 'Footfalls',
                     style: {
                       color: "#FFF"
                     }
@@ -166,11 +185,8 @@
                 },
                 series: [
                     {
-                        name: 'Unique Shoppers Captured',
+                        name: 'Footfalls per day',
                         color: '#18b682'
-                    },
-                    {
-                        name: 'Number of Shoppers Captured',
                     }
                 ],
                 navigation: {
