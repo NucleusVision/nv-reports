@@ -118,7 +118,7 @@ option{
 }
 header{
   padding: 10px 0px;
-  margin-bottom: 50px;
+  margin-bottom: 40px;
 }
 .nav-icon{
   width: 42px;
@@ -248,6 +248,6 @@ header{
     margin-bottom: 15px;
   }
   .graph-container{
-    height: 380px;
+    height: 360px;
   }
 }
